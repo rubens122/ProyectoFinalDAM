@@ -25,6 +25,12 @@ class PlaylistAdapter(
 
     override fun getItemCount(): Int = playlists.size
 
+    fun actualizarPlaylists(nuevasPlaylists: List<Playlist>) {
+        playlists.clear()
+        playlists.addAll(nuevasPlaylists)
+        notifyDataSetChanged()
+    }
+
     inner class PlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ItemPlaylistBinding.bind(itemView)
 
@@ -32,11 +38,9 @@ class PlaylistAdapter(
             binding.nombrePlaylist.text = playlist.nombre
             binding.privacidadPlaylist.text = if (playlist.esPrivada) "Privada" else "Pública"
 
-            // Cargar la imagen de la playlist
-            if (playlist.fotoRuta.isNotEmpty()) {
+            if (playlist.rutaFoto.isNotEmpty()) {
                 Picasso.get()
-                    .load("file://${playlist.fotoRuta}")
-                    .placeholder(R.drawable.ic_playlist)  // Icono por defecto
+                    .load(playlist.rutaFoto)
                     .into(binding.imagenPlaylist)
             }
 

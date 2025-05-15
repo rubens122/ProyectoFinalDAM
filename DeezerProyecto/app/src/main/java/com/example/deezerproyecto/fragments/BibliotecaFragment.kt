@@ -29,8 +29,10 @@ class BibliotecaFragment : Fragment() {
 
         // Inicialización del RecyclerView
         recyclerView = binding.recyclerPlaylists
-        playlistAdapter = PlaylistAdapter(playlists) {
-            // Acción al hacer click en una playlist
+        playlistAdapter = PlaylistAdapter(playlists) { playlist ->
+            // Aquí iría la navegación al detalle de la playlist
+            // Por ejemplo, abrir un fragmento con el detalle
+            // Toast.makeText(context, "Seleccionada: ${playlist.nombre}", Toast.LENGTH_SHORT).show()
         }
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = playlistAdapter
