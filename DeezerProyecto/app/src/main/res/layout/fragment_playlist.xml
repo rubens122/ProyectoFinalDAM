@@ -1,0 +1,38 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/campoNombrePlaylist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre de la playlist" />
+
+    <ImageView
+        android:id="@+id/imagenPreview"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/darker_gray" />
+
+    <Button
+        android:id="@+id/botonSeleccionarImagen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar Imagen" />
+
+    <Switch
+        android:id="@+id/switchPrivacidad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Privada" />
+
+    <Button
+        android:id="@+id/botonCrearPlaylist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Crear Playlist" />
+</LinearLayout>
