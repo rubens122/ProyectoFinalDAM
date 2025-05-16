@@ -6,20 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.deezerproyecto.R
 import com.example.deezerproyecto.adapters.PlaylistAdapter
 import com.example.deezerproyecto.databinding.FragmentBibliotecaBinding
 import com.example.deezerproyecto.models.Playlist
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.database.*
 
 class BibliotecaFragment : Fragment() {
 
     private var _binding: FragmentBibliotecaBinding? = null
     private val binding get() = _binding!!
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var playlistAdapter: PlaylistAdapter
     private val playlists = mutableListOf<Playlist>()
+    private lateinit var adapter: PlaylistAdapter
+    private lateinit var database: FirebaseDatabase
+    private lateinit var reference: DatabaseReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,14 +28,21 @@ class BibliotecaFragment : Fragment() {
         _binding = FragmentBibliotecaBinding.inflate(inflater, container, false)
 
         // Inicialización del RecyclerView
-        recyclerView = binding.recyclerPlaylists
-        playlistAdapter = PlaylistAdapter(playlists) { playlist ->
-            // Aquí iría la navegación al detalle de la playlist
-            // Por ejemplo, abrir un fragmento con el detalle
-            // Toast.makeText(context, "Seleccionada: ${playlist.nombre}", Toast.LENGTH_SHORT).show()
+        adapter = PlaylistAdapter(playlists) { playlist ->
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.contenedorFragment, DetallePlaylistFragment(playlist))
+                .addToBackStack(null)
+                .commit()
         }
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = playlistAdapter
+        binding.recyclerPlaylists.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerPlaylists.adapter = adapter
+
+        // Inicializar Firebase
+        database = FirebaseDatabase.getInstance()
+        reference = database.getReference("playlists")
+
+        // Cargar las playlists
+        cargarPlaylists()
 
         // Botón para añadir nueva Playlist
         binding.fabAddPlaylist.setOnClickListener {
@@ -46,6 +53,25 @@ class BibliotecaFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun cargarPlaylists() {
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                playlists.clear()
+                for (playlistSnapshot in snapshot.children) {
+                    val playlist = playlistSnapshot.getValue(Playlist::class.java)
+                    playlist?.let {
+                        playlists.add(it)
+                    }
+                }
+                adapter.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Log o Toast para mostrar el error
+            }
+        })
     }
 
     override fun onDestroyView() {

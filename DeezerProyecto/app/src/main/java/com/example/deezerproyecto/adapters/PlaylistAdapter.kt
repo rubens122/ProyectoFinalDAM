@@ -25,12 +25,6 @@ class PlaylistAdapter(
 
     override fun getItemCount(): Int = playlists.size
 
-    fun actualizarPlaylists(nuevasPlaylists: List<Playlist>) {
-        playlists.clear()
-        playlists.addAll(nuevasPlaylists)
-        notifyDataSetChanged()
-    }
-
     inner class PlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ItemPlaylistBinding.bind(itemView)
 
@@ -41,6 +35,7 @@ class PlaylistAdapter(
             if (playlist.rutaFoto.isNotEmpty()) {
                 Picasso.get()
                     .load(playlist.rutaFoto)
+                    //.placeholder(R.drawable.ic_baseline_image_24)
                     .into(binding.imagenPlaylist)
             }
 
